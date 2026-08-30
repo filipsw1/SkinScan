@@ -216,3 +216,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Modeller och data — för stora/känsliga för git
+backend/app/model/*.keras
+*.h5
+data/
+*.csv
