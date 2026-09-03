@@ -10,7 +10,7 @@ app = FastAPI(title="SkinScan API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://skin-scan-mocha.vercel.app"],
+    allow_origins=["https://skin-scan-mocha.vercel.app", "http://localhost:5173"],
     allow_methods=["*"],
     allow_headers=["*"],
 )

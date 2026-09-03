@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Sun, Camera, Maximize, X, Lock } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -52,7 +52,20 @@ function ToolPage() {
   const [preview, setPreview] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingDots, setLoadingDots] = useState(1);
   const [error, setError] = useState(null);
+  const abortControllerRef = useRef(null);
+
+  useEffect(() => {
+    if (!loading) {
+      setLoadingDots(1);
+      return;
+    }
+    const interval = setInterval(() => {
+      setLoadingDots((prev) => (prev % 3) + 1);
+    }, 500);
+    return () => clearInterval(interval);
+  }, [loading]);
 
   const handleFileChange = (e) => {
     const selected = e.target.files[0];
@@ -64,10 +77,15 @@ function ToolPage() {
   };
 
   const handleRemoveImage = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
     setFile(null);
     setPreview(null);
     setResult(null);
     setError(null);
+    setLoading(false);
   };
 
   const handleSubmit = async () => {
@@ -76,18 +94,29 @@ function ToolPage() {
     setError(null);
     setResult(null);
 
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-      const response = await fetch(`${API_URL}/predict`, { method: 'POST', body: formData });
+      const response = await fetch(`${API_URL}/predict`, {
+        method: 'POST',
+        body: formData,
+        signal: controller.signal,
+      });
       if (!response.ok) throw new Error('Servern kunde inte behandla bilden.');
       const data = await response.json();
       setResult(data);
     } catch (err) {
+      if (err.name === 'AbortError') return;
       setError('Något gick fel. Kontrollera att servern körs och försök igen.');
     } finally {
-      setLoading(false);
+      if (abortControllerRef.current === controller) {
+        setLoading(false);
+        abortControllerRef.current = null;
+      }
     }
   };
 
@@ -152,7 +181,7 @@ function ToolPage() {
 
       <div style={{ marginTop: '1.25rem' }}>
         <button className="btn" onClick={handleSubmit} disabled={!file || loading}>
-          {loading ? 'Analyserar...' : 'Analysera bild'}
+          {loading ? `Analyserar${'.'.repeat(loadingDots)}` : 'Analysera bild'}
         </button>
       </div>
 
