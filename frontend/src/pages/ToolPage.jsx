@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Sun, Camera, Maximize, X } from 'lucide-react';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 function FramingExample() {
   return (
