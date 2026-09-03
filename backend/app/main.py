@@ -3,8 +3,6 @@ from pathlib import Path
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import tensorflow as tf
-import joblib
-import numpy as np
 
 from app.preprocess import preprocess_image
 
@@ -17,19 +15,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-MODEL_PATH = Path(__file__).parent / "model" / "skin_cnn_final.keras"
+MODEL_PATH = Path(__file__).parent / "model" / "cnn_model_combined.keras"
 model = tf.keras.models.load_model(MODEL_PATH)
+
+GATEKEEPER_PATH = Path(__file__).parent / "model" / "gatekeeper_model.keras"
+gatekeeper_model = tf.keras.models.load_model(GATEKEEPER_PATH)
 
 THRESHOLD = 0.148  # kalibrerad i training.ipynb för 90% recall på malign klass
 
-feature_extractor = tf.keras.models.Model(
-    inputs=model.input,
-    outputs=model.get_layer('embedding_layer').output
-)
-
-scaler = joblib.load(Path(__file__).parent / "model" / "embedding_scaler.pkl")
-knn_ood_model = joblib.load(Path(__file__).parent / "model" / "knn_ood_model.pkl")
-ood_threshold_knn = joblib.load(Path(__file__).parent / "model" / "ood_threshold_knn.pkl")
+def get_risk_tier(probability: float) -> dict:
+    if probability < 0.10:
+        return {"tier": "low", "label": "Låg risk"}
+    elif probability < 0.30:
+        return {"tier": "consider", "label": "Överväg läkarbedömning"}
+    elif probability < 0.60:
+        return {"tier": "recommend", "label": "Rekommenderar läkarbedömning"}
+    else:
+        return {"tier": "urgent", "label": "Uppsök läkare snarast"}
 
 @app.get("/health")
 def health():
@@ -48,25 +50,23 @@ async def predict(file: UploadFile = File(...)):
     except Exception:
         raise HTTPException(status_code=400, detail="Kunde inte läsa bilden. Kontrollera filformatet.")
 
-    embedding = feature_extractor.predict(img_array, verbose=0)
-    embedding_scaled = scaler.transform(embedding)
-    distances, _ = knn_ood_model.kneighbors(embedding_scaled)
-    avg_distance = distances.mean()
+    gate_probability = float(gatekeeper_model.predict(img_array, verbose=0)[0][0])
 
-    if avg_distance > ood_threshold_knn:
+    if gate_probability < 0.5:
         return {
             "probability": None,
             "flagged": None,
             "out_of_distribution": True,
-            "message": "Bilden kunde inte identifieras som en hudlesion med tillräcklig säkerhet. Kontrollera att bilden visar ett tydligt närbild på huden och försök igen.",
-            "disclaimer": "Detta är ett utbildningsprojekt, inte ett diagnosverktyg. Denna kontroll är en bästa-möjliga-ansträngning och fångar inte alla orelaterade bilder."
+            "message": "Bilden kunde inte identifieras som en hudlesion. Kontrollera att bilden visar ett tydligt närbild på huden och försök igen.",
+            "disclaimer": "Detta är ett utbildningsprojekt, inte ett diagnosverktyg."
         }
 
     probability = float(model.predict(img_array, verbose=0)[0][0])
+    tier = get_risk_tier(probability)
 
     return {
         "probability": round(probability, 4),
-        "flagged": probability >= THRESHOLD,
-        "threshold": THRESHOLD,
-        "disclaimer": "Detta är ett utbildningsprojekt, inte ett diagnosverktyg. Uppsök alltid läkare vid oro."
+        "tier": tier["tier"],
+        "tier_label": tier["label"],
+        "disclaimer": "Detta är ett utbildningsprojekt, inte ett diagnosverktyg. Uppsök alltid läkare vid oro, oavsett resultat."
     }
