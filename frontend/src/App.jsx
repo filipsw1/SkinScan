@@ -9,7 +9,7 @@ function App() {
       <nav className="nav">
         <NavLink to="/" className="wordmark">SkinScan</NavLink>
         <div className="nav-links">
-          <NavLink to="/" end className={({isActive}) => isActive ? 'active' : ''}>Verktyget</NavLink>
+          <NavLink to="/" end className={({isActive}) => isActive ? 'active' : ''}>Analysera bild</NavLink>
           <NavLink to="/hudforandringar" className={({isActive}) => isActive ? 'active' : ''}>Om hudförändringar</NavLink>
           <NavLink to="/om-verktyget" className={({isActive}) => isActive ? 'active' : ''}>Om verktyget</NavLink>
         </div>
