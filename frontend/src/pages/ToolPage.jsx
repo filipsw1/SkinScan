@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sun, Camera, Maximize, X } from 'lucide-react';
+import { Sun, Camera, Maximize, X, Lock } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -141,6 +141,14 @@ function ToolPage() {
           </div>
         </div>
       )}
+
+      <div className="privacy-note">
+        <Lock size={16} strokeWidth={1.5} />
+        <span>
+          Bilden sparas aldrig. Den analyseras i minnet och raderas omedelbart efter att
+          resultatet visats, ingen bild eller personuppgift lagras, i linje med GDPR.
+        </span>
+      </div>
 
       <div style={{ marginTop: '1.25rem' }}>
         <button className="btn" onClick={handleSubmit} disabled={!file || loading}>
