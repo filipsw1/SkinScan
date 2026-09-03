@@ -1,0 +1,404 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --ink: #14181C;
+  --paper: #FAF8F4;
+  --clinical: #2B5D5A;
+  --clinical-tint: #E4EDEC;
+  --line: #E3DFD6;
+  --muted: #6B6F73;
+
+  --tier-low-bg: #EAF1EC;
+  --tier-low-text: #35624F;
+  --tier-consider-bg: #F6EEDC;
+  --tier-consider-text: #8C6A2E;
+  --tier-recommend-bg: #FBEAE3;
+  --tier-recommend-text: #A84C34;
+  --tier-urgent-bg: #F3D9D2;
+  --tier-urgent-text: #8A2E1F;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  margin: 0;
+}
+
+.lead {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.prose p {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+
+.shell {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 2.5rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.75rem;
+}
+
+.nav-links a {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 0.2rem 0.1rem;
+  border-radius: 4px;
+}
+
+.nav-links a.active,
+.nav-links a:hover {
+  color: var(--clinical);
+}
+
+.nav-links a:focus-visible,
+.wordmark:focus-visible {
+  outline: 2px solid var(--clinical);
+  outline-offset: 3px;
+}
+
+.wordmark {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  background: var(--clinical);
+  color: white;
+  border: none;
+  padding: 0.85rem 1.5rem;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  background: var(--line);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  background: none;
+  border: none;
+  color: var(--clinical);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  cursor: pointer;
+  padding: 0.4rem 0;
+  white-space: nowrap;
+}
+
+.tip-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.tip-row:last-child { border-bottom: none; }
+
+.tip-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--clinical-tint);
+  color: var(--clinical);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tip-row p {
+  margin: 0.45rem 0 0;
+  font-size: 0.95rem;
+}
+
+.upload-zone {
+  display: block;
+  border: 1.5px dashed var(--line);
+  border-radius: 12px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  color: var(--muted);
+}
+
+.upload-zone:hover {
+  border-color: var(--clinical);
+  background: var(--clinical-tint);
+}
+
+.preview-wrap {
+  position: relative;
+  margin-top: 1.25rem;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  line-height: 0;
+}
+
+.preview-img {
+  width: 100%;
+  display: block;
+}
+
+.preview-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 24, 28, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.preview-wrap:hover .preview-overlay {
+  background: rgba(20, 24, 28, 0.45);
+  opacity: 1;
+}
+
+.tier-card {
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.tier-card.low { background: var(--tier-low-bg); color: var(--tier-low-text); }
+.tier-card.consider { background: var(--tier-consider-bg); color: var(--tier-consider-text); }
+.tier-card.recommend { background: var(--tier-recommend-bg); color: var(--tier-recommend-text); }
+.tier-card.urgent { background: var(--tier-urgent-bg); color: var(--tier-urgent-text); }
+.tier-card.ood { background: var(--tier-consider-bg); color: var(--tier-consider-text); }
+
+.tier-card p { margin: 0 0 0.4rem; }
+.tier-card .disclaimer { font-size: 0.82rem; opacity: 0.85; margin-top: 0.75rem; }
+
+.pipeline {
+  position: relative;
+  margin: 1.5rem 0 2.5rem;
+}
+
+.pipeline-step {
+  position: relative;
+  display: flex;
+  gap: 1.1rem;
+  padding-bottom: 1.9rem;
+}
+
+.pipeline-step:last-child {
+  padding-bottom: 0;
+}
+
+.pipeline-step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 40px;
+  bottom: 0;
+  width: 1.5px;
+  background: var(--line);
+}
+
+.pipeline-icon {
+  position: relative;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--clinical-tint);
+  color: var(--clinical);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pipeline-content {
+  flex: 1;
+  padding-top: 0.15rem;
+}
+
+.pipeline-step-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 1.02rem;
+  margin: 0 0 0.35rem;
+}
+
+.pipeline-step-detail {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.pipeline-branch-note {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.83rem;
+  color: var(--muted);
+  margin: 0.6rem 0 0;
+}
+
+.pipeline-tiers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.pipeline-tier-pill {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+}
+
+.pipeline-tier-pill.low { background: var(--tier-low-bg); color: var(--tier-low-text); }
+.pipeline-tier-pill.consider { background: var(--tier-consider-bg); color: var(--tier-consider-text); }
+.pipeline-tier-pill.recommend { background: var(--tier-recommend-bg); color: var(--tier-recommend-text); }
+.pipeline-tier-pill.urgent { background: var(--tier-urgent-bg); color: var(--tier-urgent-text); }
+
+.lesion-group {
+  margin: 1.25rem 0 2.5rem;
+}
+
+.lesion-card {
+  border-left: 3px solid var(--line);
+  padding: 0.9rem 0 0.9rem 1.1rem;
+  margin-bottom: 1.1rem;
+}
+
+.lesion-card.concerning { border-left-color: #B5604A; }
+.lesion-card.benign { border-left-color: #5C8A76; }
+
+.lesion-card-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 1.02rem;
+  margin: 0 0 0.15rem;
+}
+
+.lesion-card-latin {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-style: italic;
+  margin: 0 0 0.5rem;
+}
+
+.lesion-card-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.abcde-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 0.9rem;
+  margin: 1.25rem 0 2rem;
+}
+
+.abcde-letter {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  color: var(--clinical);
+  font-size: 1.05rem;
+}
+
+.abcde-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  color: var(--ink);
+}
+
+.example-frame {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  margin: 1.5rem 0 2rem;
+}
+
+.example-frame-canvas {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+}
+
+.example-frame-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--line);
+  background: var(--clinical-tint);
+}
+
+.example-frame-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--clinical);
+  letter-spacing: 0.02em;
+}
+
+.example-frame-note {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
