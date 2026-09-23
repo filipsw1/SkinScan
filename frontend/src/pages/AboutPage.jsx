@@ -58,7 +58,7 @@ function Pipeline() {
 function AboutPage() {
   return (
     <div>
-      <h1 style={{ fontSize: '1.7rem', marginBottom: '1rem' }}>Om verktyget</h1>
+      <h1 style={{ fontSize: 'clamp(1.3rem, 6vw, 1.7rem)', marginBottom: '1rem' }}>Om verktyget</h1>
 
       <div className="prose">
         <p>

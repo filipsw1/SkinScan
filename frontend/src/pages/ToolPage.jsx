@@ -123,7 +123,7 @@ function ToolPage() {
   if (!guideConfirmed) {
     return (
       <div>
-        <h1 style={{ fontSize: '1.7rem', marginBottom: '0.5rem' }}>Ta en bild som ger bäst resultat</h1>
+        <h1 style={{ fontSize: 'clamp(1.3rem, 6vw, 1.7rem)', marginBottom: '0.5rem' }}>Ta en bild som ger bäst resultat</h1>
         <p className="lead" style={{ marginBottom: '1.5rem' }}>Tre saker gör störst skillnad.</p>
 
         <div style={{ marginBottom: '1.75rem' }}>
@@ -151,7 +151,7 @@ function ToolPage() {
   return (
     <div>
       <div className="page-header">
-        <h1 style={{ fontSize: '1.7rem' }}>Analysera en hudförändring</h1>
+        <h1 style={{ fontSize: 'clamp(1.3rem, 6vw, 1.7rem)' }}>Analysera en hudförändring</h1>
         <button className="btn-ghost" onClick={() => setGuideConfirmed(false)}>Visa fotoguiden igen</button>
       </div>
 

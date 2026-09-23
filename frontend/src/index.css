@@ -422,3 +422,60 @@ h1, h2, h3 {
   margin-top: 0.1rem;
   color: var(--clinical);
 }
+
+@media (max-width: 640px) {
+  .shell {
+    padding: 1.5rem 1.1rem 3rem;
+  }
+
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding-bottom: 1rem;
+  }
+
+  .nav-links {
+    gap: 1.1rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    font-size: 0.88rem;
+  }
+
+  .wordmark {
+    font-size: 1.15rem;
+  }
+
+  .page-header {
+    gap: 0.5rem;
+  }
+
+  .tip-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .tip-row p {
+    font-size: 0.9rem;
+  }
+
+  .upload-zone {
+    padding: 2rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .pipeline-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .lesion-card {
+    padding: 0.75rem 0 0.75rem 0.9rem;
+  }
+
+  .lesion-card-desc {
+    font-size: 0.87rem;
+  }
+}
